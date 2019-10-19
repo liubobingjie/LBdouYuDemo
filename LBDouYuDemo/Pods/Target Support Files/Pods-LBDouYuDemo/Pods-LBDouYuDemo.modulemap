@@ -1,0 +1,6 @@
+framework module Pods_LBDouYuDemo {
+  umbrella header "Pods-LBDouYuDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}
