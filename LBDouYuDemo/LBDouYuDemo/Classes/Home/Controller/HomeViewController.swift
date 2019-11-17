@@ -25,14 +25,15 @@ class HomeViewController: UIViewController {
     private lazy var pageContentView:PageContentView = {[weak self] in
         
         var childvc = [UIViewController]()
-        for _ in 0..<4 {
+        childvc.append(RecommendViewController())
+        for _ in 0..<3 {
             let vc = UIViewController()
             vc.view.backgroundColor = UIColor.randomColor()
             childvc.append(vc)
         }
         
         
-        let contentViewH :CGFloat = kScreenH - kStatusBarH - kNavigationBarH - kTitlesH
+        let contentViewH :CGFloat = kScreenH - kStatusBarH - kNavigationBarH - kTitlesH - kTabbarH
         let frame = CGRect(x: 0, y: kStatusBarH + kNavigationBarH + kTitlesH, width: kScreenW, height: contentViewH)
         
         let pageContentView = PageContentView(frame: frame, childVCs: childvc, parentViewController: self)
