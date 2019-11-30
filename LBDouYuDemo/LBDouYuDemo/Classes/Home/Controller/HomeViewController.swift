@@ -26,7 +26,8 @@ class HomeViewController: UIViewController {
         
         var childvc = [UIViewController]()
         childvc.append(RecommendViewController())
-        for _ in 0..<3 {
+        childvc.append(FunnyViewController())
+        for _ in 0..<2 {
             let vc = UIViewController()
             vc.view.backgroundColor = UIColor.randomColor()
             childvc.append(vc)

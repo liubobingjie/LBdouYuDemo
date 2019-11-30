@@ -93,7 +93,7 @@ extension RecommendViewController{
         
         //请求游戏图标数据
          var models:[BaseGameModel] = [BaseGameModel]()
-        for index in 0..<10 {
+        for _ in 0..<10 {
                 let dic = ["tag_name":"绝地求生","icon_url":"https://cs-op.douyucdn.cn/dycatr/game_cate/5a92cff5881b5c62814f5289c79b38cf.jpg"]
                 models.append(BaseGameModel(dic: dic))
          
@@ -167,6 +167,8 @@ extension RecommendViewController:UICollectionViewDataSource,UICollectionViewDel
             return CGSize(width: kItemW, height: kNormalItemH)
         }
     }
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.navigationController!.pushViewController(RoomViewController(), animated: true)
+    }
     
 }
