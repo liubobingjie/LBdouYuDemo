@@ -15,13 +15,33 @@ private let kNormalItemH:CGFloat = kItemW * 3 / 4
 private let kPrettyItemH:CGFloat = kItemW * 4 / 3
 private let kHeadH:CGFloat = 50
 
+private let KBundleHeight = kScreenW / 8 * 3
+
+private let kGameViewH : CGFloat = 90
+
 private let kNormalCellID = "kNormalCellID"
 private let kHeardViewhID = "kHeardViewhID"
 private let kPrettyCellID = "kPrettyCellID"
 
+
+
 class RecommendViewController: UIViewController {
     //MARK:-懒加载
     private lazy var recommendVM:RecommentViewModel = RecommentViewModel()
+     //MARK:-懒加载轮播
+    private lazy var cycleView:RecommendCycleView = {
+        let cycleView = RecommendCycleView.recommendCycleView()
+        //cycleView.backgroundColor = UIColor.orange
+        cycleView.frame = CGRect(x: 0, y: -(KBundleHeight + kGameViewH), width: kScreenW, height: KBundleHeight)
+        return cycleView
+    }()
+      //MARK:-懒加载game
+    private lazy var gameView:RecommendGameView = {
+        let gamesView = RecommendGameView.recommendGameView()
+        gamesView.frame = CGRect(x: 0, y: -kGameViewH, width: kScreenW, height: kGameViewH)
+        return gamesView
+    }()
+    
     
     private lazy var colloectionView :UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -49,15 +69,43 @@ class RecommendViewController: UIViewController {
         setupUI()
         colloectionView.autoresizingMask = [.flexibleWidth,.flexibleHeight]
         
+        colloectionView.addSubview(cycleView)
+        colloectionView.addSubview(gameView)
+        
+        //设置顶部内边距
+        colloectionView.contentInset = UIEdgeInsets(top: KBundleHeight + kGameViewH, left: 0, bottom: 0, right: 0)
+        
         loadData()
 
     }
 }
 extension RecommendViewController{
     private func loadData(){
+        //请求退案件数据
         recommendVM.requestData {
             self.colloectionView.reloadData()
         }
+       
+        //请求轮播数据
+        recommendVM.requiredCycleData {[weak self] in
+            self!.cycleView.cycleModels = self!.recommendVM.cycleModels
+        }
+        
+        //请求游戏图标数据
+         var models:[BaseGameModel] = [BaseGameModel]()
+        for index in 0..<10 {
+                let dic = ["tag_name":"绝地求生","icon_url":"https://cs-op.douyucdn.cn/dycatr/game_cate/5a92cff5881b5c62814f5289c79b38cf.jpg"]
+                models.append(BaseGameModel(dic: dic))
+         
+        }
+        self.gameView.groups = models
+        
+//        recommendVM.loadAllGameData {
+//            self.gameView.groups = self.recommendVM.games
+//            print("bobo+",self.gameView.groups?.count as Any)
+//        }
+        
+      
     }
     
     

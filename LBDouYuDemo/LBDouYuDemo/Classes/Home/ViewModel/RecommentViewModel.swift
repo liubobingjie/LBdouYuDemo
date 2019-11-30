@@ -12,6 +12,9 @@ class RecommentViewModel: NSObject {
      lazy var anchorGroup:[AnchorGroupModel] = [AnchorGroupModel]()
      lazy var bigDataGroup :AnchorGroupModel = AnchorGroupModel()
      lazy var prettyGroup: AnchorGroupModel = AnchorGroupModel ()
+    lazy var cycleModels:[CycleModel] = [CycleModel]()
+    
+     lazy var games : [BaseGameModel] = [BaseGameModel]()
 
 }
 
@@ -79,4 +82,47 @@ extension RecommentViewModel{
         }
         
     }
+    
+    func requiredCycleData(finishCallBack:@escaping ()->())  {
+        NetworkTool.requestData(type: MethodType.get, URLString: "http://www.douyutv.com/api/v1/slide/6", parameters: ["version":"2.300"]) { (result) in
+            guard let resultDic = result as? [String:Any] else {return}
+            
+            guard let dataArray = resultDic["data"] as? [[String:Any]] else {return}
+            
+            //字典转模型
+            for dict in dataArray {
+              self.cycleModels.append(CycleModel(dic: dict))
+                
+            }
+            finishCallBack()
+            
+            
+        }
+    }
+    
+    //获取游戏图片主题
+    func loadAllGameData(finishCallBack:@escaping ()->()){
+        
+        NetworkTool.requestData(type: MethodType.get, URLString: "http://capi.douyucdn.cn/api/v1/getColumnDetail", parameters: ["shortName":"game"]) { (result) in
+            guard let resultDic = result as? [String:Any] else {return}
+            
+            print(resultDic)
+            
+            guard let dataArray = resultDic["data"] as? [[String:Any]] else {return}
+             print(dataArray)
+            //字典转模型
+            for dict in dataArray {
+                self.games.append(BaseGameModel(dic:dict))
+                
+            }
+            finishCallBack()
+            
+            
+        }
+        
+        
+    }
+    
+    
+    
 }
